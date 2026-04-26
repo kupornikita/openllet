@@ -1,5 +1,6 @@
 package openllet.owlapi;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -12,30 +13,8 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.semanticweb.owlapi.model.AddAxiom;
-import org.semanticweb.owlapi.model.AddImport;
-import org.semanticweb.owlapi.model.AxiomType;
-import org.semanticweb.owlapi.model.IRI;
-import org.semanticweb.owlapi.model.OWLAnnotationProperty;
-import org.semanticweb.owlapi.model.OWLAxiom;
-import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLClassExpression;
-import org.semanticweb.owlapi.model.OWLDataFactory;
-import org.semanticweb.owlapi.model.OWLDataProperty;
-import org.semanticweb.owlapi.model.OWLDataPropertyExpression;
-import org.semanticweb.owlapi.model.OWLDatatype;
-import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLLiteral;
-import org.semanticweb.owlapi.model.OWLNamedIndividual;
-import org.semanticweb.owlapi.model.OWLObject;
-import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
-import org.semanticweb.owlapi.model.OWLOntology;
-import org.semanticweb.owlapi.model.OWLOntologyChange;
-import org.semanticweb.owlapi.model.OWLOntologyChangeVisitor;
-import org.semanticweb.owlapi.model.OWLOntologyManager;
-import org.semanticweb.owlapi.model.OWLRuntimeException;
-import org.semanticweb.owlapi.model.RemoveAxiom;
-import org.semanticweb.owlapi.model.RemoveImport;
+import openllet.aterm.ATerm;
+import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.reasoner.AxiomNotInProfileException;
 import org.semanticweb.owlapi.reasoner.BufferingMode;
 import org.semanticweb.owlapi.reasoner.ClassExpressionNotInProfileException;
@@ -59,6 +38,7 @@ import org.semanticweb.owlapi.reasoner.impl.OWLClassNodeSet;
 import org.semanticweb.owlapi.reasoner.impl.OWLDataPropertyNodeSet;
 import org.semanticweb.owlapi.reasoner.impl.OWLNamedIndividualNodeSet;
 import org.semanticweb.owlapi.reasoner.impl.OWLObjectPropertyNodeSet;
+import org.semanticweb.owlapi.reasoner.knowledgeexploration.OWLKnowledgeExplorerReasoner;
 import org.semanticweb.owlapi.util.Version;
 
 import openllet.aterm.ATermAppl;
@@ -70,7 +50,7 @@ import openllet.core.utils.ATermUtils;
 import openllet.core.utils.VersionInfo;
 import openllet.shared.tools.Log;
 
-public class PelletReasoner implements OpenlletReasoner
+public class PelletReasoner implements OpenlletReasoner, OWLKnowledgeExplorerReasoner
 {
 
 	public static final Logger _logger = Log.getLogger(PelletReasoner.class);
@@ -139,6 +119,95 @@ public class PelletReasoner implements OpenlletReasoner
 		}
 
 		return 0;
+	}
+
+	private class RootNodeImpl implements RootNode, Serializable {
+
+
+		private final openllet.core.boxes.abox.Node node;
+
+		public RootNodeImpl(openllet.core.boxes.abox.Node node) {
+			this.node = node;
+		}
+
+		@Override
+		public <T> T getNode() {
+			return (T) node;
+		}
+	}
+	@Override
+	public RootNode getRoot(OWLClassExpression expression) {
+
+		_kb.isConsistent(); //TODO pridat to do samostatnej funkcii
+
+		final Collection<openllet.core.boxes.abox.Node> nodes = _kb.getABox().getNodes().values();
+
+		if (!(expression instanceof OWLObjectOneOf oneOf)) {
+			throw new UnsupportedOperationException("Expected OWLObjectOneOf, got: " + expression.getClass());
+		}
+		final OWLIndividual individual = oneOf.individuals().findFirst()
+				.orElseThrow(() -> new IllegalArgumentException("Empty OWLObjectOneOf: " + expression));
+
+		final ATermAppl term;
+		synchronized (_visitor) {
+			individual.accept(_visitor);
+			term = _visitor.result();
+		}
+		for (final openllet.core.boxes.abox.Node node : _kb.getABox().getNodes().values()) {
+			if (node.getName().equals(term)) {
+				return new RootNodeImpl(node);
+			}
+		}
+
+		return null;
+	}
+
+	@Override
+	public Node<? extends OWLObjectPropertyExpression> getObjectNeighbours(RootNode node, boolean deterministicOnly) {
+		return null;
+	}
+
+	@Override
+	public Node<OWLDataProperty> getDataNeighbours(RootNode node, boolean deterministicOnly) {
+		return null;
+	}
+
+	@Override
+	public Collection<RootNode> getObjectNeighbours(RootNode node, OWLObjectProperty property) {
+		return List.of();
+	}
+
+	@Override
+	public Collection<RootNode> getDataNeighbours(RootNode node, OWLDataProperty property) {
+		return List.of();
+	}
+
+	@Override
+	public Node<? extends OWLClassExpression> getObjectLabel(RootNode node, boolean deterministicOnly) {
+
+
+		final Collection<openllet.core.boxes.abox.Node> nodes = _kb.getABox().getNodes().values();
+//		nodes.forEach(nodeABox -> {
+//
+//			nodeABox.getEntities()
+//			for (ATermAppl type : nodeABox.getTypes()) {
+//				if (!type.toString().equals("_TOP_") && !type.toString().startsWith("value")){
+//					System.out.println("Label: " + type);
+//				}
+//			}
+//		});
+
+		return null;
+	}
+
+	@Override
+	public Node<? extends OWLDataRange> getDataLabel(RootNode node, boolean deterministicOnly) {
+		return null;
+	}
+
+	@Override
+	public RootNode getBlocker(RootNode node) {
+		return null;
 	}
 
 	private class ChangeVisitor implements OWLOntologyChangeVisitor
