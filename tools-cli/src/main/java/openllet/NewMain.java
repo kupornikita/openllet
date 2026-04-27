@@ -1,9 +1,9 @@
 package openllet;
 
 import openllet.owlapi.OpenlletReasoner;
-import openllet.reachability.Node;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.reasoner.Node;
 import org.semanticweb.owlapi.reasoner.knowledgeexploration.OWLKnowledgeExplorerReasoner;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 import openllet.owlapi.OpenlletReasonerFactory;
@@ -32,7 +32,9 @@ public class NewMain {
 
 
             OWLKnowledgeExplorerReasoner.RootNode rootNode = keReasoner.getRoot(individual);
-            Node smth = (Node) keReasoner.getObjectLabel(rootNode,false);
+            Node<? extends OWLClassExpression> labels = keReasoner.getObjectLabel(rootNode,false);
+
+            Node<? extends OWLObjectPropertyExpression> roles = keReasoner.getObjectNeighbours(rootNode,false);
 
             System.out.println("");
         }
