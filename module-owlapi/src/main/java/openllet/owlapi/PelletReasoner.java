@@ -1,7 +1,6 @@
 package openllet.owlapi;
 
 import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -14,10 +13,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import openllet.aterm.AFun;
 import openllet.aterm.ATerm;
-import openllet.aterm.ATermList;
-import openllet.core.boxes.abox.Edge;
 import openllet.core.boxes.abox.EdgeList;
 import openllet.core.boxes.abox.Individual;
 import org.semanticweb.owlapi.model.*;
@@ -51,7 +47,6 @@ import openllet.core.exceptions.PelletRuntimeException;
 import openllet.core.utils.ATermUtils;
 import openllet.core.utils.VersionInfo;
 import openllet.shared.tools.Log;
-import uk.ac.manchester.cs.owl.owlapi.OWLClassAssertionAxiomImpl;
 
 public class PelletReasoner implements OpenlletReasoner, OWLKnowledgeExplorerReasoner
 {
@@ -124,6 +119,19 @@ public class PelletReasoner implements OpenlletReasoner, OWLKnowledgeExplorerRea
 		return 0;
 	}
 
+	/**
+	 * ensures that tableau tree is built
+	 */
+	private void treeBuild(){
+
+		if(!_kb.isConsistencyDone()){
+			//throw new RuntimeException("KB is not consistent");
+			_kb.isConsistent();
+
+		}
+
+	}
+
 	private class RootNodeImpl implements RootNode, Serializable {
 
 
@@ -141,9 +149,9 @@ public class PelletReasoner implements OpenlletReasoner, OWLKnowledgeExplorerRea
 	@Override
 	public RootNode getRoot(OWLClassExpression expression) {
 
-		_kb.isConsistent(); //TODO pridat to do samostatnej funkcii
+		treeBuild();
 
-		final Collection<openllet.core.boxes.abox.Node> nodes = _kb.getABox().getNodes().values();
+		Collection<openllet.core.boxes.abox.Node> nodes = _kb.getABox().getNodes().values();
 
 		if (!(expression instanceof OWLObjectOneOf oneOf)) {
 			throw new UnsupportedOperationException("Expected OWLObjectOneOf, got: " + expression.getClass());
@@ -168,10 +176,14 @@ public class PelletReasoner implements OpenlletReasoner, OWLKnowledgeExplorerRea
 	@Override
 	public Node<? extends OWLObjectPropertyExpression> getObjectNeighbours(RootNode node, boolean deterministicOnly) {
 
-//		final Collection<openllet.core.boxes.abox.Node> nodes = _kb.getABox().getNodes().values();
-//		nodes.forEach(nodeABox -> {
-//			if(node.getNode().equals(nodeABox) ){
-//				Set<ATermAppl> types = nodeABox.getTypes();
+		treeBuild();
+
+
+		final Set<ATermAppl>[] typess = new Set[1];
+		final Collection<openllet.core.boxes.abox.Node> nodes = _kb.getABox().getNodes().values();
+		nodes.forEach(nodeABox -> {
+			if(node.getNode().equals(nodeABox) ){
+				typess[0] = nodeABox.getTypes();
 //				for (ATermAppl type : nodeABox.getTypes()) {
 //
 //					if (type.getAFun().equals(ATermUtils.ALLFUN) || type.getAFun().equals(ATermUtils.SOMEFUN)) {
@@ -186,16 +198,21 @@ public class PelletReasoner implements OpenlletReasoner, OWLKnowledgeExplorerRea
 //						System.out.println("");
 //					}
 //				}
-//				System.out.println("");
-//			}
-//		});
-//		return null;
+				System.out.println("");
+			}
+		});
 
 		final RootNodeImpl impl = (RootNodeImpl) node;
 		final openllet.core.boxes.abox.Node inputNode = impl.getNode();
 
 		// possibly inputNode.getABox().getRole()
-		// returns empty list inputNode.getInEdges()
+		EdgeList inEdges = inputNode.getInEdges();
+		EdgeList outEdges = ((Individual) inputNode).getOutEdges();
+
+		Set<ATermAppl> allClasses = _kb.getTBox().getAllClasses();
+		Collection<ATermAppl> allAxioms = _kb.getTBox().getAxioms();
+
+		//_kb.getABox().getRole();
 
 		// possibly inputNode.getABox().getInEdges()
 		// possibly inputNode.getABox().getOutEdges()
@@ -211,6 +228,8 @@ public class PelletReasoner implements OpenlletReasoner, OWLKnowledgeExplorerRea
 
 	@Override
 	public Node<? extends OWLClassExpression> getObjectLabel(RootNode node, boolean deterministicOnly) {
+
+		treeBuild();
 
 		OWLClassNode result = new OWLClassNode();
 

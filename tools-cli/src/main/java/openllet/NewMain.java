@@ -17,12 +17,14 @@ import static java.util.stream.Collectors.toSet;
 public class NewMain {
     public static void main(String[] args) throws Exception {
 
-        File ontologyFile = new File("D:/studium/diplom/CATS/CATS-Abduction-Solver/ont/testtest.rdf");
+        File ontologyFile = new File("D:/studium/diplom/openllet/openllet/ontologies/lubm-sindividualom.owx");
         OWLOntologyManager ontologyManager = OWLManager.createOWLOntologyManager();
         OWLOntology ontology = ontologyManager.loadOntologyFromOntologyDocument(ontologyFile);
         OpenlletReasonerFactory reasonerFactory = new OpenlletReasonerFactory();
         OpenlletReasoner reasoner = reasonerFactory.createReasoner(ontology);
         OWLKnowledgeExplorerReasoner keReasoner = (OWLKnowledgeExplorerReasoner) reasoner;
+
+
 
 
         Set<OWLNamedIndividual> individuals = ontology.getIndividualsInSignature();
