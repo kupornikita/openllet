@@ -11,6 +11,7 @@ Abduction finds a hypothesis that, together with the knowledge base, entails an 
 
 -----------------------------------------------
 2026 Summer Semester:
+-----------------------------------------------
 December: Basic framework, introduction to DL and tableau algorithm
 
 January: Introduction to DL and MHS / literature study
@@ -22,8 +23,10 @@ March: Review of DL and Abduction tools
 April: Implementation of OWLKnowledgeExplorerReasoner interface in Openllet
 
 May: Creation of the skeleton of the work, testing
------------------------------------------------
+
+--------------------------------
 TODO:
+-----------------------------------------------
 1) Completion of OWL API implementation
 
 2) Integration of reasoners into CATS abduction tool:
