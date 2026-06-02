@@ -201,6 +201,8 @@ public class PelletReasoner implements OpenlletReasoner, OWLKnowledgeExplorerRea
 	@Override // Implemented
 	public Collection<RootNode> getObjectNeighbours(RootNode node, OWLObjectProperty property) {
 
+		treeBuild();
+
 		final RootNodeImpl impl = (RootNodeImpl) node;
 		final openllet.core.boxes.abox.Node inputNode = impl.getNode();
 		final EdgeList outEdges = ((Individual) inputNode).getOutEdges();
