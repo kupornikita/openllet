@@ -10,6 +10,7 @@ import openllet.owlapi.OpenlletReasonerFactory;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Set;
 
 import static java.util.stream.Collectors.toSet;
@@ -17,7 +18,7 @@ import static java.util.stream.Collectors.toSet;
 public class NewMain {
     public static void main(String[] args) throws Exception {
 
-        File ontologyFile = new File("D:/studium/diplom/openllet/openllet/ontologies/lubm-sindividualom.owx");
+        File ontologyFile = new File("D:/studium/diplom/openllet/openllet/ontologies/verticesTesting.rdf");
         OWLOntologyManager ontologyManager = OWLManager.createOWLOntologyManager();
         OWLOntology ontology = ontologyManager.loadOntologyFromOntologyDocument(ontologyFile);
         OpenlletReasonerFactory reasonerFactory = new OpenlletReasonerFactory();
@@ -38,6 +39,9 @@ public class NewMain {
 
             Node<? extends OWLObjectPropertyExpression> roles = keReasoner.getObjectNeighbours(rootNode,false);
 
+            for (OWLObjectPropertyExpression role: roles.getEntities()) {
+                Collection<OWLKnowledgeExplorerReasoner.RootNode> nodes2 = keReasoner.getObjectNeighbours(rootNode, role.getNamedProperty());
+            }
             System.out.println("");
         }
 

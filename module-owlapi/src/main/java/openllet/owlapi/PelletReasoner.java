@@ -13,7 +13,11 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import openllet.aterm.AFun;
 import openllet.aterm.ATerm;
+import openllet.core.PropertyType;
+import openllet.core.boxes.abox.ABox;
+import openllet.core.boxes.abox.Edge;
 import openllet.core.boxes.abox.EdgeList;
 import openllet.core.boxes.abox.Individual;
 import org.semanticweb.owlapi.model.*;
@@ -146,7 +150,9 @@ public class PelletReasoner implements OpenlletReasoner, OWLKnowledgeExplorerRea
 			return (T) node;
 		}
 	}
-	@Override
+
+
+	@Override 	// Implemented
 	public RootNode getRoot(OWLClassExpression expression) {
 
 		treeBuild();
@@ -173,60 +179,47 @@ public class PelletReasoner implements OpenlletReasoner, OWLKnowledgeExplorerRea
 		return null;
 	}
 
-	@Override
+	@Override // Implemented
 	public Node<? extends OWLObjectPropertyExpression> getObjectNeighbours(RootNode node, boolean deterministicOnly) {
 
 		treeBuild();
 
+		final RootNodeImpl impl = (RootNodeImpl) node;
+		final openllet.core.boxes.abox.Node inputNode = impl.getNode();
+		final EdgeList outEdges = ((Individual) inputNode).getOutEdges();
+		final Set<ATermAppl> roleTerms = new HashSet<>();
 
-		final Set<ATermAppl>[] typess = new Set[1];
-		final Collection<openllet.core.boxes.abox.Node> nodes = _kb.getABox().getNodes().values();
-		nodes.forEach(nodeABox -> {
-			if(node.getNode().equals(nodeABox) ){
-				typess[0] = nodeABox.getTypes();
-//				for (ATermAppl type : nodeABox.getTypes()) {
-//
-//					if (type.getAFun().equals(ATermUtils.ALLFUN) || type.getAFun().equals(ATermUtils.SOMEFUN)) {
-//					}
-//
-//
-//					final ATerm[] argumentsArray= type.getArgumentArray();
-//					if (argumentsArray.length != 0){
-//						ATerm arg = argumentsArray[0];
-//						ATermAppl bullshit = arg.getFactory().makeAppl(type.getAFun(), arg);
-//						AFun fun2 = bullshit.getAFun();
-//						System.out.println("");
-//					}
-//				}
-				System.out.println("");
-			}
-		});
+		for (Edge edge : outEdges) {
+			roleTerms.add(edge.getRole().getName());
+		}
+
+
+		return NodeFactory.getOWLObjectPropertyNode(OP_MAPPER.map(roleTerms));
+
+	}
+
+	@Override // Implemented
+	public Collection<RootNode> getObjectNeighbours(RootNode node, OWLObjectProperty property) {
 
 		final RootNodeImpl impl = (RootNodeImpl) node;
 		final openllet.core.boxes.abox.Node inputNode = impl.getNode();
+		final EdgeList outEdges = ((Individual) inputNode).getOutEdges();
 
-		// possibly inputNode.getABox().getRole()
-		EdgeList inEdges = inputNode.getInEdges();
-		EdgeList outEdges = ((Individual) inputNode).getOutEdges();
+		Collection<RootNode> result = new ArrayList<>();
 
-		Set<ATermAppl> allClasses = _kb.getTBox().getAllClasses();
-		Collection<ATermAppl> allAxioms = _kb.getTBox().getAxioms();
+		for (Edge edge : outEdges) {
+			if(edge.getRole().getName().toString().equals(property.getIRI().toString())){
+				RootNodeImpl object = new RootNodeImpl(edge.getTo());
+				result.add(object);
+				System.out.println("");
 
-		//_kb.getABox().getRole();
+			}
+		}
 
-		// possibly inputNode.getABox().getInEdges()
-		// possibly inputNode.getABox().getOutEdges()
-
-		return null;
-
+		return result;
 	}
 
-	@Override
-	public Collection<RootNode> getObjectNeighbours(RootNode node, OWLObjectProperty property) {
-		return List.of();
-	}
-
-	@Override
+	@Override // Implemented
 	public Node<? extends OWLClassExpression> getObjectLabel(RootNode node, boolean deterministicOnly) {
 
 		treeBuild();
@@ -252,24 +245,22 @@ public class PelletReasoner implements OpenlletReasoner, OWLKnowledgeExplorerRea
 		return result;
 	}
 
-	@Override
+	@Override // Not used
 	public Node<OWLDataProperty> getDataNeighbours(RootNode node, boolean deterministicOnly) {
 		return null; //not used
 	}
 
-
-	@Override
+	@Override // Not used
 	public Collection<RootNode> getDataNeighbours(RootNode node, OWLDataProperty property) {
 		return List.of(); //not used
 	}
 
-
-	@Override
+	@Override // Not used
 	public Node<? extends OWLDataRange> getDataLabel(RootNode node, boolean deterministicOnly) {
 		return null; //not used
 	}
 
-	@Override
+	@Override // Not used
 	public RootNode getBlocker(RootNode node) {
 		return null; //not used
 	}

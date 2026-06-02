@@ -1,0 +1,126 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns="http://www.semanticweb.org/kupor/ontologies/2026/5/untitled-ontology-29/"
+     xml:base="http://www.semanticweb.org/kupor/ontologies/2026/5/untitled-ontology-29/"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:untitled-ontology-29="http://www.semanticweb.org/kupor/ontologies/2026/5/untitled-ontology-29#">
+    <owl:Ontology rdf:about="http://www.semanticweb.org/kupor/ontologies/2026/5/untitled-ontology-29"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/kupor/ontologies/2026/5/untitled-ontology-29#doesntTeach -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/kupor/ontologies/2026/5/untitled-ontology-29#doesntTeach"/>
+    
+
+
+    <!-- http://www.semanticweb.org/kupor/ontologies/2026/5/untitled-ontology-29#teaches -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/kupor/ontologies/2026/5/untitled-ontology-29#teaches"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/kupor/ontologies/2026/5/untitled-ontology-29#NonStudent -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/kupor/ontologies/2026/5/untitled-ontology-29#NonStudent"/>
+    
+
+
+    <!-- http://www.semanticweb.org/kupor/ontologies/2026/5/untitled-ontology-29#Student -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/kupor/ontologies/2026/5/untitled-ontology-29#Student"/>
+    
+
+
+    <!-- http://www.semanticweb.org/kupor/ontologies/2026/5/untitled-ontology-29#Teacher -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/kupor/ontologies/2026/5/untitled-ontology-29#Teacher">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/kupor/ontologies/2026/5/untitled-ontology-29#teaches"/>
+                <owl:someValuesFrom rdf:resource="http://www.semanticweb.org/kupor/ontologies/2026/5/untitled-ontology-29#Student"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Individuals
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/kupor/ontologies/2026/5/untitled-ontology-29#Jakubko -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/kupor/ontologies/2026/5/untitled-ontology-29#Jakubko"/>
+    
+
+
+    <!-- http://www.semanticweb.org/kupor/ontologies/2026/5/untitled-ontology-29#Julia -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/kupor/ontologies/2026/5/untitled-ontology-29#Julia">
+        <rdf:type rdf:resource="http://www.semanticweb.org/kupor/ontologies/2026/5/untitled-ontology-29#Teacher"/>
+        <untitled-ontology-29:doesntTeach rdf:resource="http://www.semanticweb.org/kupor/ontologies/2026/5/untitled-ontology-29#Jakubko"/>
+        <untitled-ontology-29:teaches rdf:resource="http://www.semanticweb.org/kupor/ontologies/2026/5/untitled-ontology-29#Maria"/>
+        <untitled-ontology-29:teaches rdf:resource="http://www.semanticweb.org/kupor/ontologies/2026/5/untitled-ontology-29#Nikita"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/kupor/ontologies/2026/5/untitled-ontology-29#Maria -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/kupor/ontologies/2026/5/untitled-ontology-29#Maria">
+        <rdf:type rdf:resource="http://www.semanticweb.org/kupor/ontologies/2026/5/untitled-ontology-29#Student"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/kupor/ontologies/2026/5/untitled-ontology-29#Nikita -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/kupor/ontologies/2026/5/untitled-ontology-29#Nikita">
+        <rdf:type>
+            <owl:Class>
+                <owl:unionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="http://www.semanticweb.org/kupor/ontologies/2026/5/untitled-ontology-29#NonStudent"/>
+                    <rdf:Description rdf:about="http://www.semanticweb.org/kupor/ontologies/2026/5/untitled-ontology-29#Student"/>
+                </owl:unionOf>
+            </owl:Class>
+        </rdf:type>
+    </owl:NamedIndividual>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 4.5.29.2024-05-13T12:11:03Z) https://github.com/owlcs/owlapi -->
+
