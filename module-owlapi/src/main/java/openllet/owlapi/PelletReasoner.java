@@ -213,7 +213,6 @@ public class PelletReasoner implements OpenlletReasoner, OWLKnowledgeExplorerRea
 			if(edge.getRole().getName().toString().equals(property.getIRI().toString())){
 				RootNodeImpl object = new RootNodeImpl(edge.getTo());
 				result.add(object);
-				System.out.println("");
 
 			}
 		}
@@ -239,7 +238,6 @@ public class PelletReasoner implements OpenlletReasoner, OWLKnowledgeExplorerRea
 					if (arguments.length == 0){
 						result.add(CLASS_MAPPER.map(type));
 					}
-					System.out.println("");
 				}
 			}
 		});
