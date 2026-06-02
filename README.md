@@ -1,127 +1,36 @@
-Openllet: An Open Source OWL DL reasoner for Java
+Extending MHS-Based Abduction in DLs through OWL API Integration
 -----------------------------------------------
+Kupor Mykyta
 
-<!-- No support for java 17 [![Codeship Build Status](https://codeship.com/projects/1fe60a20-f84b-0134-33ee-76e4f316aab3/status?branch=integration)](https://app.codeship.com/projects/210924) -->
-[![CircleCI](https://circleci.com/gh/Galigator/openllet/tree/integration.svg?style=svg)](https://circleci.com/gh/Galigator/openllet/tree/integration)
-[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Galigator/pelletEvolution?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![Twitter](https://img.shields.io/badge/twitter-openllet-blue.svg)](https://twitter.com/openllet)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/d1acfdbe2c194252a311e223cd94e64e)](https://www.codacy.com/app/sejourne_kevin/openllet?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Galigator/openllet&amp;utm_campaign=Badge_Grade)
-<!--<a href="https://www.versioneye.com/user/projects/5832fff3e7cea00029198b38"><img src="https://www.versioneye.com/user/projects/5832fff3e7cea00029198b38/badge.svg?style=flat"/></a>-->
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.galigator.openllet/openllet-owlapi/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.galigator.openllet/openllet-owlapi)
+Master Thesis
 
-
-Openllet is an OWL 2 DL reasoner: 
 --------------------------------
+Integration of the OWLKnowledgeExplorerReasoner into Openllet
 
-Openllet can be used with [Jena](https://jena.apache.org/) or [OWL-API](http://owlcs.github.io/owlapi/) libraries. Openllet provides functionality to check consistency of ontologies, compute the classification hierarchy, 
-explain inferences, and answer SPARQL queries.
+Abduction finds a hypothesis that, together with the knowledge base, entails an observation. While tableau DL reasoners utilize completion graphs, model-based abduction (the MHS algorithm) requires access to logical models. The main constraint is that current MHS solutions rely on accessing specific completion graph labels from the reasoner. This access is dependent on the implementation of particular OWL API components that expose these internal structures. This dependency restricts the abduction framework to only compatible reasoners. Our goal is to extend the applicability of MHS-based abduction by enabling the employment of powerful DL reasoners that currently do not implement this required OWL API functionality for exposing completion graph labels. We achieve this by implementing the necessary OWL API functionality directly into the reasoners to expose the required structural information. Simultaneously, we will perform necessary maintenance and functional upgrades to open-source reasoner codebases, thus significantly expanding the set of compatible and powerful DL engines.
 
-Feel free to fork this repository and submit pull requests if you want to see changes, new features, etc. in Openllet.
-We need a lot more tests, send your samples if you can.
+-----------------------------------------------
+2026 Summer Semester:
+-----------------------------------------------
+December: Basic framework, introduction to DL and tableau algorithm
 
-There are some code samples in the [examples/](https://github.com/Galigator/openllet/tree/integration/examples) directory.
-Issues are on [Github](http://github.com/galigator/openllet/issues).
-Pellet community is on [pellet-users mailing list](https://groups.google.com/forum/?fromgroups#!forum/pellet-users).
+January: Introduction to DL and MHS / literature study
 
+February: Introduction to DL, MHS and OWL API
 
-Openllet 2.6.X:
------------
+March: Review of DL and Abduction tools
 
-* Refactor modules dependencies.
-* Enforce interface usage in the core system.
-* Lighter hash functions and less conflict when use in multi-thread environnement.
-* since 2.6.5 : full java 11 support, java 11 is a requirement.
+April: Implementation of OWLKnowledgeExplorerReasoner interface in Openllet
 
-### Migration :
+May: Creation of the skeleton of the work, testing
 
-* lots of com.clarkparsia.* / com.mindswap.* are refactored into openllet.* to avoid conflicts and have typing changed a lot.
-* dependencies on modern libs.
+--------------------------------
+TODO:
+-----------------------------------------------
+1) Completion of OWL API implementation
 
-```xml
-	<dependency>
-		<groupId>com.github.galigator.openllet</groupId>
-		<artifactId>openllet-owlapi</artifactId>
-		<version>2.6.5</version>
-	</dependency>
-	<dependency>
-		<groupId>com.github.galigator.openllet</groupId>
-		<artifactId>openllet-jena</artifactId>
-		<version>2.6.5</version>
-	</dependency>
-```
+2) Integration of reasoners into CATS abduction tool:
+a) Provision of core functionality
+b) Extension of functionality
 
-NB, the Protege plugin need a Protege that work with an 5.1.X version of the OWL-API, so the main branch of Protege isn't compatible with Openllet.
-
-### Roadmap :
-
-* Fullify strong typing in openllet core (2.7.X).
-* Add support for rdf-database reasoning (2.8.X).
-
-### Examples :
-
-Play with the Owl-Api:
-```java
-try (final OWLManagerGroup group = new OWLManagerGroup())
-{
-	final OWLOntologyID ontId = OWLHelper.getVersion(IRI.create("http://myOnotology"), 1.0);
-	final OWLHelper owl = new OWLGenericTools(group, ontId, true);
-
-	final OWLNamedIndividual x1 = OWL.Individual("#I1");
-	final OWLNamedIndividual x2 = OWL.Individual("#I2");
-
-	owl.addAxiom(OWL.equivalentClasses(ClsA, OWL.some(propB, OWL.restrict(XSD.STRING, OWL.facetRestriction(OWLFacet.PATTERN, OWL.constant("A.A"))))));
-	owl.addAxiom(OWL.propertyAssertion(x1, propB, OWL.constant("AAA")));
-	owl.addAxiom(OWL.propertyAssertion(x2, propB, OWL.constant("BBB")));
-	owl.addAxiom(OWL.differentFrom(x1, x2));
-
-	final OpenlletReasoner r = owl.getReasoner();
-	assertTrue(r.isEntailed(OWL.classAssertion(x1, ClsA)));
-	assertFalse(r.isEntailed(OWL.classAssertion(x2, ClsA)));
-}
-```
-
-Play with Jena:
-```java
-	final String ns = "http://www.example.org/test#";
-
-	final OntModel model = ModelFactory.createOntologyModel(PelletReasonerFactory.THE_SPEC);
-	model.read(_base + "uncle.owl");
-
-	final Individual Bob = model.getIndividual(ns + "Bob");
-	final Individual Sam = model.getIndividual(ns + "Sam");
-
-	final Property uncleOf = model.getProperty(ns + "uncleOf");
-
-	final Model uncleValues = ModelFactory.createDefaultModel();
-	addStatements(uncleValues, Bob, uncleOf, Sam);
-	assertPropertyValues(model, uncleOf, uncleValues);
-```
-
-Openllet 2.5.X:
------------
-
-* full java 8 support, java 8 is a requirement.
-* speed and stability improvement
-
-Changes :
-* Update versions of libs : owlapi 5, jena3 and lots more. Some old libs have been integrated and cleaned, strongly typed into openllet.
-* Corrections : all tests works, no more warnings with high level of reports in Eclipse.
-
-Migration :
-* pellet/owlapi/src/main/java/com/clarkparsia/owlapiv3/ is now  pellet/owlapi/src/main/java/com/clarkparsia/owlapi/
-* groupId   com.clarkparsia.pellet   is now   com.github.galigator.openllet
-
-
-Pellet 1..2.3] Licences and supports: 
--------------------------------------
- 
-* [open source](https://github.com/complexible/pellet/blob/master/LICENSE.txt) (AGPL) or commercial license
-* Historically developed and commercially supported by Complexible Inc; Maybe now https://www.stardog.com/
-
-
-Thanks for using Openllet.
-
-### Others experimentals stuffs
-
-[![CircleCI Build Status](https://circleci.com/gh/Galigator/openllet.svg?style=shield)](https://circleci.com/gh/Galigator/openllet)
-[![codecov](https://codecov.io/gh/Galigator/openllet/branch/integration/graph/badge.svg)](https://codecov.io/gh/Galigator/openllet)
+3)Comparative evaluation.
