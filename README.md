@@ -4,6 +4,17 @@ Kupor Mykyta
 
 Master Thesis
 
+<div>
+    <img src="https://volby.fmph.uniba.sk/static/FMFI_logo.png" width="50%"/>
+</div>
+
+
+Important links:
+
+[Master Thesis PDF](https://www.youtube.com/)
+
+[CATS tool](https://github.com/Comenius-Abduction-Team/CATS-Abduction-Solver/tree/main/in)
+
 --------------------------------
 Integration of the OWLKnowledgeExplorerReasoner into Openllet
 
@@ -24,13 +35,20 @@ April: Implementation of OWLKnowledgeExplorerReasoner interface in Openllet
 
 May: Creation of the skeleton of the work, testing
 
+-----------------------------------------------
+2026 Winter Semester:
+-----------------------------------------------
+August: Implemented resoner testing: AAA vs Pellet, negation vs non-negation. CATS timeout bug fix.
+
+September: Switches and readme updates in CATS. Complex evaluation of Pellet vs JFact, memory and speed graphs comparisons. Pellet memory issues investigations.
+
+October:  Complex evaluation of Pellet vs JFact, memory and speed graphs comparisons, timeout vs depth limitation, memory leaks investigation, CATS logging bugs fixing, logging, switches and readme updates.
+
+November: New type of logging update (peak for specific level), Complex evaluation of Pellet vs JFact, graphs creation and comparing. State of the art section writing.
+
 --------------------------------
 TODO:
 -----------------------------------------------
-1) Completion of OWL API implementation
-
-2) Integration of reasoners into CATS abduction tool:
-a) Provision of core functionality
-b) Extension of functionality
-
-3)Comparative evaluation.
+1) Comparative evaluation.
+2) Possible FaCT++ integration
+3) Diploma Thesis writing.
