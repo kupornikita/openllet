@@ -1,8 +1,7 @@
 Extending MHS-Based Abduction in DLs through OWL API Integration
 -----------------------------------------------
-Kupor Mykyta
-
-Master Thesis
+## Master Thesis
+## Kupor Mykyta
 
 <div>
     <img src="https://volby.fmph.uniba.sk/static/FMFI_logo.png" width="50%"/>
@@ -22,7 +21,9 @@ Abduction finds a hypothesis that, together with the knowledge base, entails an 
 
 -----------------------------------------------
 2026 Summer Semester:
+
 -----------------------------------------------
+
 December: Basic framework, introduction to DL and tableau algorithm
 
 January: Introduction to DL and MHS / literature study
@@ -37,7 +38,9 @@ May: Creation of the skeleton of the work, testing
 
 -----------------------------------------------
 2026 Winter Semester:
+
 -----------------------------------------------
+
 August: Implemented resoner testing: AAA vs Pellet, negation vs non-negation. CATS timeout bug fix.
 
 September: Switches and readme updates in CATS. Complex evaluation of Pellet vs JFact, memory and speed graphs comparisons. Pellet memory issues investigations.
